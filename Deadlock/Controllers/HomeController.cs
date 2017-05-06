@@ -1,18 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Deadlock.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ApiController
     {
-        public ActionResult Index()
+        public string Get()
         {
-            ViewBag.Title = "Home Page";
+            var stringTask = GetSomethingAsync();
+            string stringResult = stringTask.Result.ToString();
+            return stringResult;
+        }
 
-            return View();
+        public static async Task<string> GetSomethingAsync()
+        {
+            using (var client = new HttpClient())
+            {
+                var resultString = await client.GetStringAsync("http://www.google.com");
+                return resultString;
+            }
         }
     }
 }
